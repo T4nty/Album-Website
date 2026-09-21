@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Angel Album 💕</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --pink: #ff8fb1; --deep: #e0568a; --ink: #6b5560; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Quicksand', system-ui, sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffe9f3 0%, #ffe1ee 22%, #f6e3ff 52%, #e2f1ff 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    padding-bottom: 90px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .icon { display: inline-block; vertical-align: middle; flex: none; }
+
+  /* ---------- floating hearts background ---------- */
+  .hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .heart {
+    position: absolute; bottom: -60px;
+    animation: floatUp linear infinite;
+    opacity: 0; user-select: none; display: block; line-height: 0;
+  }
+  .heart svg { display: block; }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg) scale(.5); opacity: 0; }
+    12%  { opacity: .75; }
+    85%  { opacity: .5; }
+    100% { transform: translateY(-115vh) rotate(380deg) scale(1.1); opacity: 0; }
+  }
+
+  /* ---------- header ---------- */
+  header { position: relative; z-index: 1; text-align: center; padding: 64px 20px 8px; }
+  h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2.1rem, 6.5vw, 3.6rem);
+    color: var(--deep); line-height: 1.25;
+    text-shadow: 0 3px 0 #fff, 0 8px 24px rgba(224, 86, 138, .28);
+  }
+  .sub {
+    margin-top: 10px;
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.15rem, 3.4vw, 1.6rem);
+    color: #b87a94; letter-spacing: .5px;
+  }
+
+  /* ---------- album grid ---------- */
+  .album {
+    position: relative; z-index: 1;
+    max-width: 1120px; margin: 0 auto;
+    padding: 44px 28px 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 40px 30px;
+  }
+
+  .polaroid {
+    position: relative; background: #fff;
+    padding: 13px 13px 60px;
+    border-radius: 5px;
+    transform: rotate(var(--rot, 0deg));
+    box-shadow: 0 14px 30px -12px rgba(160, 90, 120, .45), 0 3px 8px rgba(160, 90, 120, .12);
+    cursor: pointer;
+    transition: transform .45s cubic-bezier(.2, .9, .3, 1.35), box-shadow .45s ease;
+    animation: popIn .65s cubic-bezier(.2, .9, .3, 1.35) backwards;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: rotate(var(--rot, 0deg)) scale(.7) translateY(30px); }
+    to   { opacity: 1; transform: rotate(var(--rot, 0deg)) scale(1) translateY(0); }
+  }
+
+  /* washi tape */
+  .polaroid::before {
+    content: ''; position: absolute; top: -11px; left: 50%;
+    width: 82px; height: 24px;
+    transform: translateX(-50%) rotate(-3.5deg);
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(255, 219, 235, .92), rgba(255, 186, 213, .78));
+    box-shadow: 0 2px 7px rgba(200, 120, 150, .25);
+  }
+  .polaroid:nth-child(even)::before {
+    transform: translateX(-50%) rotate(3.5deg);
+    background: linear-gradient(180deg, rgba(226, 219, 255, .92), rgba(203, 196, 255, .78));
+  }
+
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.055) translateY(-8px);
+    box-shadow: 0 26px 45px -14px rgba(160, 90, 120, .5), 0 6px 14px rgba(160, 90, 120, .16);
+    z-index: 5;
+  }
+
+  .photo {
+    position: relative; aspect-ratio: 1 / 1;
+    border-radius: 3px; overflow: hidden;
+    background: linear-gradient(135deg, var(--c1, #ffd6e8), var(--c2, #ffe9f3));
+    display: grid; place-items: center;
+  }
+  .photo .ph-icon { width: 48px; height: 48px; color: #c9557f; opacity: .5; }
+  .photo img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform .6s cubic-bezier(.2, .9, .3, 1);
+  }
+  .polaroid:hover .photo img { transform: scale(1.07); }
+
+  .photo::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(120deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, 0) 45%);
+    pointer-events: none;
+  }
+
+  .caption {
+    position: absolute; left: 0; right: 0; bottom: 24px;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 1.32rem; font-weight: 700;
+    color: #7a5a68; padding: 0 12px; line-height: 1.1;
+  }
+  .date {
+    position: absolute; left: 0; right: 0; bottom: 9px;
+    text-align: center;
+    font-size: .68rem; letter-spacing: 1.4px; text-transform: uppercase;
+    font-weight: 600; color: #c9a4b4;
+  }
+
+  /* ---------- shuffle button ---------- */
+  .dock {
+    position: fixed; left: 50%; bottom: 26px;
+    transform: translateX(-50%);
+    z-index: 50;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 14px 24px;
+    border: none; border-radius: 999px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700; font-size: .95rem;
+    color: #c9557f; cursor: pointer;
+    background: rgba(255, 255, 255, .85);
+    box-shadow: 0 12px 26px -10px rgba(200, 110, 150, .8);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    transition: transform .25s cubic-bezier(.2, .9, .3, 1.4), box-shadow .25s;
+    user-select: none;
+  }
+  .btn:hover  { transform: translateY(-3px) scale(1.04); box-shadow: 0 18px 30px -10px rgba(200, 110, 150, .85); background: #fff; }
+  .btn:active { transform: translateY(0) scale(.97); }
+  .btn .icon { width: 18px; height: 18px; }
+
+  /* ---------- music button ---------- */
+  .music-btn {
+    position: fixed; top: 22px; right: 22px; z-index: 60;
+    width: 54px; height: 54px; border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, .95);
+    background: rgba(255, 255, 255, .72);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 12px 26px -10px rgba(200, 110, 150, .75);
+    cursor: pointer;
+    display: grid; place-items: center;
+    color: #c9557f;
+    transition: transform .25s cubic-bezier(.2, .9, .3, 1.4), background .25s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .music-btn:hover  { transform: scale(1.09); background: #fff; }
+  .music-btn:active { transform: scale(.95); }
+  .music-btn .note { display: block; line-height: 0; transition: transform .3s; }
+  .music-btn .note svg { display: block; width: 26px; height: 26px; }
+  .music-btn.playing .note { animation: bounceNote 1.4s ease-in-out infinite; }
+  @keyframes bounceNote {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-3px) rotate(-7deg); }
+  }
+  .music-btn.playing::after {
+    content: ''; position: absolute; inset: -6px; border-radius: 50%;
+    border: 2px solid rgba(224, 86, 138, .55);
+    animation: pulseRing 1.9s ease-out infinite;
+  }
+  @keyframes pulseRing {
+    0%   { transform: scale(.85); opacity: .8; }
+    100% { transform: scale(1.28); opacity: 0; }
+  }
+  .music-hint {
+    position: fixed; top: 34px; right: 88px; z-index: 60;
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 15px; border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
+    border: 2px solid rgba(255, 255, 255, .95);
+    box-shadow: 0 10px 24px -12px rgba(200, 110, 150, .9);
+    font-size: .8rem; font-weight: 600; color: #c9557f;
+    white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateX(10px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .music-hint .icon { width: 14px; height: 14px; }
+  .music-hint.show { opacity: 1; transform: translateX(0); }
+
+  /* ---------- lightbox ---------- */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 100;
+    display: grid; place-items: center; padding: 28px;
+    background: rgba(58, 28, 43, .74);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    opacity: 0; pointer-events: none;
+    transition: opacity .35s ease;
+  }
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lb-card {
+    position: relative; background: #fff;
+    padding: 16px 16px 74px; border-radius: 6px;
+    max-width: min(88vw, 520px);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, .6);
+    transform: scale(.85) translateY(24px);
+    transition: transform .45s cubic-bezier(.2, .9, .3, 1.35);
+  }
+  .lightbox.open .lb-card { transform: scale(1) translateY(0); }
+  .lb-photo {
+    position: relative;
+    width: min(78vw, 488px);
+    aspect-ratio: 1 / 1; border-radius: 3px; overflow: hidden;
+    background: linear-gradient(135deg, var(--c1, #ffd6e8), var(--c2, #ffe9f3));
+    display: grid; place-items: center;
+  }
+  .lb-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .lb-photo .ph-icon { width: 88px; height: 88px; color: #c9557f; opacity: .5; }
+  .lb-caption {
+    position: absolute; left: 0; right: 0; bottom: 34px;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem; font-weight: 700;
+    color: #7a5a68; padding: 0 20px;
+  }
+  .lb-date {
+    position: absolute; left: 0; right: 0; bottom: 14px;
+    text-align: center;
+    font-size: .7rem; letter-spacing: 1.6px; text-transform: uppercase;
+    font-weight: 600; color: #c9a4b4;
+  }
+  .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 46px; height: 46px; border-radius: 50%; border: none;
+    display: grid; place-items: center; color: #c9557f;
+    background: rgba(255, 255, 255, .9);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .25);
+    cursor: pointer;
+    transition: transform .2s, background .2s;
+  }
+  .lb-nav:hover { background: #fff; transform: translateY(-50%) scale(1.12); }
+  .lb-nav svg { width: 18px; height: 18px; display: block; }
+  .lb-prev { left: max(14px, calc(50% - min(44vw, 300px))); }
+  .lb-next { right: max(14px, calc(50% - min(44vw, 300px))); }
+  .lb-close {
+    position: absolute; top: 20px; right: 22px;
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    color: #fff; background: rgba(255, 255, 255, .16);
+    cursor: pointer; display: grid; place-items: center;
+    transition: background .2s, transform .2s;
+  }
+  .lb-close svg { width: 18px; height: 18px; display: block; }
+  .lb-close:hover { background: rgba(255, 255, 255, .3); transform: rotate(90deg); }
+  .lb-count {
+    position: absolute; top: 26px; left: 26px;
+    font-size: .8rem; font-weight: 600; letter-spacing: 1px;
+    color: rgba(255, 255, 255, .75);
+  }
+
+  /* ---------- heart burst ---------- */
+  .burst-heart {
+    position: fixed; pointer-events: none; z-index: 200;
+    line-height: 0;
+    animation: burst 1.1s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  .burst-heart svg { display: block; }
+  @keyframes burst {
+    0%   { transform: translate(-50%, -50%) scale(.3); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.15) rotate(35deg); opacity: 0; }
+  }
+
+  /* ---------- footer ---------- */
+  .footer-note {
+    position: relative; z-index: 1;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem; color: #b87a94;
+    padding: 0 24px 30px;
+  }
+
+  @media (max-width: 560px) {
+    .album {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 30px 18px; padding: 34px 16px 30px;
+    }
+    .polaroid { padding: 9px 9px 46px; }
+    .polaroid::before { width: 58px; height: 18px; top: -8px; }
+    .caption { font-size: 1.05rem; bottom: 19px; }
+    .date { font-size: .58rem; bottom: 7px; }
+    .photo .ph-icon { width: 34px; height: 34px; }
+    .lb-prev { left: 8px; }
+    .lb-next { right: 8px; }
+    .lb-nav { width: 40px; height: 40px; }
+    header { padding-top: 46px; }
+    .music-btn { top: 14px; right: 14px; width: 46px; height: 46px; }
+    .music-btn .note svg { width: 22px; height: 22px; }
+    .music-hint { top: 24px; right: 70px; font-size: .72rem; padding: 6px 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SVG ICON LIBRARY
+     ============================================================ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+  </symbol>
+  <symbol id="i-heart-o" viewBox="0 0 24 24">
+    <path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"
+          d="M12 20.4C6.4 15.6 3.4 12.7 3.4 9.1 3.4 6.6 5.3 4.6 7.7 4.6c1.4 0 2.8.7 3.9 2 1.1-1.3 2.5-2 3.9-2 2.4 0 4.3 2 4.3 4.5 0 3.6-3 6.5-8.6 11.3z"/>
+  </symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24">
+    <path d="M12 1.8l2.1 7.4L21.5 12l-7.4 2.8L12 22.2 9.9 14.8 2.5 12l7.4-2.8z"/>
+    <path d="M19.2 3.2l.8 2.4 2.4.8-2.4.8-.8 2.4-.8-2.4-2.4-.8 2.4-.8z" opacity=".65"/>
+  </symbol>
+  <symbol id="i-flower" viewBox="0 0 24 24">
+    <g><circle cx="12" cy="7.4" r="3.2"/><circle cx="16.6" cy="10.8" r="3.2"/>
+       <circle cx="14.8" cy="16.3" r="3.2"/><circle cx="9.2" cy="16.3" r="3.2"/>
+       <circle cx="7.4" cy="10.8" r="3.2"/></g>
+    <circle cx="12" cy="12" r="2.2" fill="#fff"/>
+  </symbol>
+  <symbol id="i-music" viewBox="0 0 24 24">
+    <ellipse cx="7.6" cy="17.6" rx="3.4" ry="2.6"/>
+    <ellipse cx="17.4" cy="15.6" rx="3.4" ry="2.6"/>
+    <path d="M11 17.6V5.4l9.8-2v12.2" fill="none" stroke="currentColor" stroke-width="2.4"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-music-2" viewBox="0 0 24 24">
+    <ellipse cx="6.6" cy="18" rx="3.2" ry="2.5"/>
+    <ellipse cx="17.6" cy="15" rx="3.2" ry="2.5"/>
+    <path d="M9.8 18V6.4l10.8-2.2v10.6" fill="none" stroke="currentColor" stroke-width="2.4"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24">
+    <path d="M3 7h3.6l9.8 10h3.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3 17h3.6l9.8-10h3.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.4 4l2.8 3-2.8 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.4 14l2.8 3-2.8 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24">
+    <path d="M4 9.2v5.6h3.4L12 18.4V5.6L7.4 9.2H4z"/>
+    <path d="M16 9.4l5.4 5.4M21.4 9.4L16 14.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="i-image" viewBox="0 0 24 24">
+    <rect x="3" y="4.2" width="18" height="15.6" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.9"/>
+    <circle cx="8.6" cy="9.6" r="1.7"/>
+    <path d="M4.2 17.4l4.8-4.8 3.9 3.9 2.9-2.9 4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-chevron-l" viewBox="0 0 24 24">
+    <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-chevron-r" viewBox="0 0 24 24">
+    <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24">
+    <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- floating hearts -->
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+
+<!-- music -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="bg-sound/The%20Dress.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" id="musicBtn" title="Play / pause music" aria-label="Play or pause background music">
+  <span class="note">
+    <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <use id="musicNoteUse" href="#i-music"/>
+    </svg>
+  </span>
+</button>
+<div class="music-hint" id="musicHint">
+  <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-music"/></svg>
+  tap for music
+</div>
+
+<header>
+  <h1>Angel's Little Album</h1>
+  <p class="sub">Angel moments ♡</p>
+</header>
+
+<main class="album" id="album"></main>
+
+<p class="footer-note">mwehehehehehe</p>
+
+<!-- shuffle -->
+<div class="dock">
+  <button class="btn" id="shuffleBtn" title="Shuffle the album" aria-label="Shuffle the album">
+    <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-shuffle"/></svg>
+    Shuffle
+  </button>
+</div>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <span class="lb-count" id="lbCount"></span>
+  <button class="lb-close" id="lbClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-close"/></svg>
+  </button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-chevron-l"/></svg>
+  </button>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-chevron-r"/></svg>
+  </button>
+
+  <div class="lb-card">
+    <div class="lb-photo" id="lbPhoto">
+      <svg class="ph-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <use id="lbPlaceholderUse" href="#i-image"/>
+      </svg>
+      <img id="lbImg" alt="">
+    </div>
+    <p class="lb-caption" id="lbCaption"></p>
+    <p class="lb-date" id="lbDate"></p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1. CONFIG
+   ============================================================ */
+
+// 🎵 Background music — sits in the bg-sound folder next to index.html
+const MUSIC_FILE = 'bg-sound/The%20Dress.mp3';
+const MUSIC_VOLUME = 0.6;
+
+/* ------------------------------------------------------------
+   🖼️  YOUR 8 PHOTOS — replace each `src` with your image path.
+       Examples of valid paths:
+         src: 'photos/first-date.jpg'
+         src: 'images/beach.png'
+         src: 'https://example.com/photo.jpg'
+   ------------------------------------------------------------
+   caption = text under the photo
+   date    = small label below the caption
+   icon    = fallback icon shown if the image fails to load
+             (heart, heart-o, flower, sparkle, music, image)
+   c1/c2   = pastel background used behind the photo
+   ------------------------------------------------------------ */
+let photos = [
+  {
+    src: 'photos/photo1.jpg',
+    caption: 'Where it all began',
+    date: 'the beginning',
+    icon: 'flower',
+    c1: '#ffd6e8', c2: '#ffeaf3'
+  },
+  {
+    src: 'photos/photo2.jpg',
+    caption: 'That perfect afternoon',
+    date: 'summer',
+    icon: 'sparkle',
+    c1: '#d9e8ff', c2: '#eef5ff'
+  },
+  {
+    src: 'photos/photo3.jpg',
+    caption: 'Sweetest day ever',
+    date: 'a good day',
+    icon: 'heart',
+    c1: '#ffe6cc', c2: '#fff4e6'
+  },
+  {
+    src: 'photos/photo4.jpg',
+    caption: 'Lost in the moment',
+    date: 'just us',
+    icon: 'heart-o',
+    c1: '#cdeef0', c2: '#e8f9fa'
+  },
+  {
+    src: 'photos/photo5.jpg',
+    caption: 'My favourite person',
+    date: 'always',
+    icon: 'sparkle',
+    c1: '#e6dbff', c2: '#f4eeff'
+  },
+  {
+    src: 'photos/photo6.jpg',
+    caption: 'Dancing in the kitchen',
+    date: 'a tuesday',
+    icon: 'music',
+    c1: '#ffd9e2', c2: '#ffeef3'
+  },
+  {
+    src: 'photos/photo7.jpg',
+    caption: 'Our little adventure',
+    date: 'somewhere new',
+    icon: 'flower',
+    c1: '#ffe1cc', c2: '#fff5ec'
+  },
+  {
+    src: 'photos/photo8.jpg',
+    caption: 'Just us, always',
+    date: 'forever',
+    icon: 'heart',
+    c1: '#e3f0ff', c2: '#f3f8ff'
+  }
+];
+
+/* ============================================================
+   2. ELEMENTS
+   ============================================================ */
+const albumEl   = document.getElementById('album');
+const heartsEl  = document.getElementById('hearts');
+const lightbox  = document.getElementById('lightbox');
+const lbImg     = document.getElementById('lbImg');
+const lbPhoto   = document.getElementById('lbPhoto');
+const lbCaption = document.getElementById('lbCaption');
+const lbDate    = document.getElementById('lbDate');
+const lbCount   = document.getElementById('lbCount');
+const lbPlaceholderUse = document.getElementById('lbPlaceholderUse');
+
+const bgMusic   = document.getElementById('bgMusic');
+const musicBtn  = document.getElementById('musicBtn');
+const musicNoteUse = document.getElementById('musicNoteUse');
+const musicHint = document.getElementById('musicHint');
+
+let currentIndex = 0;
+
+/* ============================================================
+   3. SVG HELPER
+   ============================================================ */
+function svgIcon(name, size, color) {
+  const c = color || 'currentColor';
+  return `<svg class="icon" width="${size}" height="${size}" viewBox="0 0 24 24" fill="${c}" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+}
+
+/* ============================================================
+   4. FLOATING HEARTS
+   ============================================================ */
+function spawnBackgroundHearts(count = 18) {
+  const icons  = ['heart', 'heart', 'heart-o', 'sparkle', 'flower', 'heart'];
+  const colors = ['#ff8fb1', '#ffb3c6', '#c9a4ff', '#ffc4a3', '#ffa5d8', '#e0568a'];
+  for (let i = 0; i < count; i++) {
+    const h = document.createElement('span');
+    h.className = 'heart';
+    const size = 14 + Math.random() * 22;
+    const name = icons[Math.floor(Math.random() * icons.length)];
+    const col  = colors[Math.floor(Math.random() * colors.length)];
+    h.innerHTML = svgIcon(name, size, col);
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.animationDuration = (11 + Math.random() * 14) + 's';
+    h.style.animationDelay = (-Math.random() * 22) + 's';
+    heartsEl.appendChild(h);
+  }
+}
+spawnBackgroundHearts();
+
+/* ============================================================
+   5. RENDER THE ALBUM
+   ============================================================ */
+function rotationFor(i) {
+  const pattern = [-3.2, 2.4, -1.6, 3.4, -2.6, 1.8];
+  return pattern[i % pattern.length];
+}
+
+function escapeHtml(str = '') {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function renderAlbum() {
+  albumEl.innerHTML = '';
+
+  photos.forEach((p, i) => {
+    const card = document.createElement('article');
+    card.className = 'polaroid';
+    card.style.setProperty('--rot', rotationFor(i) + 'deg');
+    card.style.animationDelay = (i * 0.08) + 's';
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', p.caption);
+
+    const iconName = p.icon || 'image';
+
+    card.innerHTML = `
+      <div class="photo" style="--c1:${p.c1 || '#ffd6e8'}; --c2:${p.c2 || '#ffeaf3'}">
+        <svg class="ph-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-${iconName}"/></svg>
+        <img src="${p.src}" alt="${escapeHtml(p.caption)}" loading="lazy"
+             onerror="this.style.display='none'">
+      </div>
+      <p class="caption">${escapeHtml(p.caption)}</p>
+      <span class="date">${escapeHtml(p.date || '')}</span>
+    `;
+
+    const open = (e) => {
+      burstHearts(e.clientX, e.clientY);
+      openLightbox(i);
+    };
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const r = card.getBoundingClientRect();
+        burstHearts(r.left + r.width / 2, r.top + r.height / 2);
+        openLightbox(i);
+      }
+    });
+
+    albumEl.appendChild(card);
+  });
+}
+
+renderAlbum();
+
+/* ============================================================
+   6. LIGHTBOX
+   ============================================================ */
+function openLightbox(i) {
+  currentIndex = i;
+  paintLightbox();
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function paintLightbox() {
+  const p = photos[currentIndex];
+  if (!p) return;
+
+  lbPhoto.style.setProperty('--c1', p.c1 || '#ffd6e8');
+  lbPhoto.style.setProperty('--c2', p.c2 || '#ffeaf3');
+  lbPlaceholderUse.setAttribute('href', '#i-' + (p.icon || 'image'));
+
+  lbImg.style.display = '';
+  lbImg.src = p.src;
+  lbImg.alt = p.caption || '';
+  lbCaption.textContent = p.caption || '';
+  lbDate.textContent = p.date || '';
+  lbCount.textContent = `${currentIndex + 1} / ${photos.length}`;
+
+  const card = lbPhoto.parentElement;
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'popIn .5s cubic-bezier(.2,.9,.3,1.35)';
+}
+function nextPhoto() { currentIndex = (currentIndex + 1) % photos.length; paintLightbox(); }
+function prevPhoto() { currentIndex = (currentIndex - 1 + photos.length) % photos.length; paintLightbox(); }
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbNext').addEventListener('click', (e) => { e.stopPropagation(); nextPhoto(); });
+document.getElementById('lbPrev').addEventListener('click', (e) => { e.stopPropagation(); prevPhoto(); });
+
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+document.addEventListener('keydown', (e) => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape')     closeLightbox();
+  if (e.key === 'ArrowRight') nextPhoto();
+  if (e.key === 'ArrowLeft')  prevPhoto();
+});
+
+let touchStartX = 0;
+lightbox.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+lightbox.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 55) (dx < 0 ? nextPhoto : prevPhoto)();
+}, { passive: true });
+
+/* ============================================================
+   7. SHUFFLE
+   ============================================================ */
+document.getElementById('shuffleBtn').addEventListener('click', () => {
+  for (let i = photos.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [photos[i], photos[j]] = [photos[j], photos[i]];
+  }
+  renderAlbum();
+});
+
+/* ============================================================
+   8. HEART BURST
+   ============================================================ */
+function burstHearts(x, y) {
+  const icons  = ['heart', 'heart-o', 'sparkle', 'flower'];
+  const colors = ['#ff8fb1', '#e0568a', '#c9a4ff', '#ffb3c6', '#ffc4a3'];
+  for (let i = 0; i < 7; i++) {
+    const h = document.createElement('span');
+    h.className = 'burst-heart';
+    const size = 13 + Math.random() * 17;
+    const name = icons[Math.floor(Math.random() * icons.length)];
+    const col  = colors[Math.floor(Math.random() * colors.length)];
+    h.innerHTML = svgIcon(name, size, col);
+    h.style.left = x + 'px';
+    h.style.top = y + 'px';
+    h.style.setProperty('--dx', (Math.random() * 180 - 90) + 'px');
+    h.style.setProperty('--dy', (-70 - Math.random() * 130) + 'px');
+    h.style.animationDelay = (Math.random() * 0.12) + 's';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1400);
+  }
+}
+
+/* ============================================================
+   9. BACKGROUND MUSIC
+   ============================================================ */
+let musicWanted = true;
+let fadeTimer = null;
+
+bgMusic.src = MUSIC_FILE;
+bgMusic.volume = 0;
+
+function fadeVolume(target, ms = 900) {
+  clearInterval(fadeTimer);
+  const start = bgMusic.volume;
+  const t0 = performance.now();
+  fadeTimer = setInterval(() => {
+    const k = Math.min(1, (performance.now() - t0) / ms);
+    bgMusic.volume = Math.max(0, Math.min(1, start + (target - start) * k));
+    if (k >= 1) clearInterval(fadeTimer);
+  }, 30);
+}
+
+async function playMusic() {
+  try {
+    bgMusic.volume = 0;
+    await bgMusic.play();
+    musicWanted = true;
+    fadeVolume(MUSIC_VOLUME);
+    updateMusicBtn();
+    hideMusicHint();
+    return true;
+  } catch (err) { return false; }
+}
+
+function pauseMusic() {
+  musicWanted = false;
+  fadeVolume(0, 400);
+  setTimeout(() => { if (!musicWanted) bgMusic.pause(); }, 420);
+  updateMusicBtn();
+}
+
+function updateMusicBtn() {
+  const playing = !bgMusic.paused;
+  musicBtn.classList.toggle('playing', playing);
+  musicNoteUse.setAttribute('href', playing ? '#i-music-2' : '#i-music');
+  musicBtn.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
+}
+
+musicBtn.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  if (bgMusic.paused) await playMusic();
+  else pauseMusic();
+});
+
+function firstGesture(e) {
+  if (e && e.target && e.target.closest && e.target.closest('#musicBtn')) return;
+  if (!musicWanted || !bgMusic.paused) return;
+  playMusic();
+}
+['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach((ev) =>
+  window.addEventListener(ev, firstGesture, { passive: true })
+);
+
+bgMusic.addEventListener('play',  updateMusicBtn);
+bgMusic.addEventListener('pause', updateMusicBtn);
+bgMusic.addEventListener('error', () => {
+  musicBtn.title = 'Music file not found — check the filename';
+  musicNoteUse.setAttribute('href', '#i-mute');
+});
+
+let hintTimer = null;
+function showMusicHint() {
+  if (!bgMusic.paused) return;
+  clearTimeout(hintTimer);
+  musicHint.classList.add('show');
+  hintTimer = setTimeout(hideMusicHint, 4600);
+}
+function hideMusicHint() {
+  clearTimeout(hintTimer);
+  musicHint.classList.remove('show');
+}
+setTimeout(showMusicHint, 1400);
+</script>
+</body>
+</html>
