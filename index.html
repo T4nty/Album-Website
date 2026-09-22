@@ -246,19 +246,51 @@
     font-size: .7rem; letter-spacing: 1.6px; text-transform: uppercase;
     font-weight: 600; color: #c9a4b4;
   }
-  .lb-nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 46px; height: 46px; border-radius: 50%; border: none;
-    display: grid; place-items: center; color: #c9557f;
-    background: rgba(255, 255, 255, .9);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, .25);
-    cursor: pointer;
-    transition: transform .2s, background .2s;
-  }
-  .lb-nav:hover { background: #fff; transform: translateY(-50%) scale(1.12); }
-  .lb-nav svg { width: 18px; height: 18px; display: block; }
-  .lb-prev { left: max(14px, calc(50% - min(44vw, 300px))); }
-  .lb-next { right: max(14px, calc(50% - min(44vw, 300px))); }
+.lb-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 150;
+
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .9);
+
+  display: grid;
+  place-items: center;
+
+  color: #c9557f;
+  background: rgba(255, 255, 255, .95);
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, .3);
+
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+
+.lb-nav:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.12);
+}
+
+.lb-nav:active {
+  transform: translateY(-50%) scale(.95);
+}
+
+.lb-nav svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+}
+
+.lb-prev {
+  left: 25px;
+}
+
+.lb-next {
+  right: 25px;
+}
   .lb-close {
     position: absolute; top: 20px; right: 22px;
     width: 44px; height: 44px; border-radius: 50%; border: none;
@@ -306,9 +338,23 @@
     .caption { font-size: 1.05rem; bottom: 19px; }
     .date { font-size: .58rem; bottom: 7px; }
     .photo .ph-icon { width: 34px; height: 34px; }
-    .lb-prev { left: 8px; }
-    .lb-next { right: 8px; }
-    .lb-nav { width: 40px; height: 40px; }
+.lb-prev {
+  left: 10px;
+}
+
+.lb-next {
+  right: 10px;
+}
+
+.lb-nav {
+  width: 42px;
+  height: 42px;
+}
+
+.lb-nav svg {
+  width: 18px;
+  height: 18px;
+}
     header { padding-top: 46px; }
     .music-btn { top: 14px; right: 14px; width: 46px; height: 46px; }
     .music-btn .note svg { width: 22px; height: 22px; }
@@ -412,10 +458,7 @@
 
 <main class="album" id="album"></main>
 
-<p class="footer-note">
-  mwehehehe :P <br>
-  Made by Tanty &lt;3
-</p>
+<p class="footer-note"> mwehehehe :P <br> Made by Tanty &lt;3 </p>
 
 
 <!-- shuffle -->
@@ -476,57 +519,64 @@ const MUSIC_VOLUME = 0.6;
 let photos = [
   {
     src: 'pictures/813613163_28140762382260924_6618386204183638911_n.jpg',
-    caption: 'Where it all began',
-    date: 'the beginning',
+    caption: 'Had to keep this one',
+    date: '♡ ♡ ♡',
     icon: 'flower',
     c1: '#ffd6e8', c2: '#ffeaf3'
   },
+
   {
     src: 'pictures/813135401_1092305700461052_6326816740570964969_n.jpg',
-    caption: 'That perfect afternoon',
-    date: 'summer',
+    caption: 'Pretty Eyes',
+    date: '<3',
     icon: 'sparkle',
     c1: '#d9e8ff', c2: '#eef5ff'
   },
+
   {
     src: 'pictures/812696668_2210784879638868_5373056207171401924_n.jpg',
-    caption: 'Sweetest day ever',
-    date: 'a good day',
+    caption: 'Cute Smile',
+    date: ':)',
     icon: 'heart',
     c1: '#ffe6cc', c2: '#fff4e6'
   },
+
   {
     src: 'pictures/783331326_1664857681279118_705644660396501469_n.jpg',
-    caption: 'Lost in the moment',
-    date: 'just us',
+    caption: 'Casual Cutie',
+    date: '‪‪❤︎‬',
     icon: 'heart-o',
     c1: '#cdeef0', c2: '#e8f9fa'
   },
+
   {
     src: 'pictures/809314334_1092783260161776_2452197557991543507_n.jpg',
-    caption: 'My favourite person',
-    date: 'always',
+    caption: 'Cute Nose',
+    date: ':P',
     icon: 'sparkle',
     c1: '#e6dbff', c2: '#f4eeff'
   },
+
   {
     src: 'pictures/819538352_2113186069552298_3675332210184753406_n.jpg',
-    caption: 'Dancing in the kitchen',
-    date: 'a tuesday',
+    caption: 'Hair Style',
+    date: '𑣲',
     icon: 'music',
     c1: '#ffd9e2', c2: '#ffeef3'
   },
+
   {
     src: 'pictures/818424158_2277278876360034_4775385896576264773_n.jpg',
-    caption: 'Our little adventure',
-    date: 'somewhere new',
+    caption: 'hmm',
+    date: ':|',
     icon: 'flower',
     c1: '#ffe1cc', c2: '#fff5ec'
   },
+
   {
     src: 'pictures/813860486_1066346569307771_6951188932450035515_n.jpg',
-    caption: 'Just us, always',
-    date: 'forever',
+    caption: 'Pretty Style',
+    date: '♡ˎˊ˗',
     icon: 'heart',
     c1: '#e3f0ff', c2: '#f3f8ff'
   }
